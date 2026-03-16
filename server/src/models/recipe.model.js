@@ -30,9 +30,6 @@ const recipeSchema = new mongoose.Schema(
 
     cookingTime: {
       type: Number,
-      required: [true, "Cooking time is required"],
-      min: [1, "Cooking time must be at least 1 minute"],
-      max: [240, "Cooking time cannot exceed 4 hours"],
     },
 
     coverImage: {
