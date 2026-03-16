@@ -37,11 +37,11 @@ const recipeSchema = new mongoose.Schema(
       default: null,
     },
 
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Creator information is required"],
-    },
+    // createdBy: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: [true, "Creator information is required"],
+    // },
   },
   { timestamps: true },
 );
