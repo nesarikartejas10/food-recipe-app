@@ -60,3 +60,14 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     user: { id: user._id, email: user.email },
   });
 });
+
+export const getUser = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+
+  const user = await User.findById(id).select("-password");
+
+  if (!user) {
+    return next(createHttpError(404, "User not found"));
+  }
+  res.status(200).json({ success: true, user: { email: user.email } });
+});
