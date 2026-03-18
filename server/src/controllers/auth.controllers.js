@@ -20,7 +20,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 
   const newUser = await User.create({ email, password: hashedPassword });
   const token = jwt.sign({ id: newUser._id, email }, config.jwtSecret, {
-    expiresIn: "1hr",
+    expiresIn: "1h",
   });
   return res.status(201).json({
     success: true,
@@ -30,6 +30,33 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const loginUser = asyncHandler(async () => {});
+export const loginUser = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
 
-export const getUser = asyncHandler(async () => {});
+  if (!email || !password) {
+    return next(createHttpError(400, "All fields are required"));
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(createHttpError(401, "Invalid Credentials"));
+  }
+
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatch) {
+    return next(createHttpError(401, "Incorrect Password"));
+  }
+
+  const token = jwt.sign({ id: user._id, email }, config.jwtSecret, {
+    expiresIn: "1h",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "User logged in successfully",
+    token,
+    user: { id: user._id, email: user.email },
+  });
+});
